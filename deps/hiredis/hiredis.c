@@ -55,7 +55,7 @@ static redisReplyObjectFunctions defaultFunctions = {
     createIntegerObject,
     createNilObject,
     freeReplyObject
-};
+};//初始化结构体
 
 /* Create a reply object */
 static redisReply *createReplyObject(int type) {
@@ -558,14 +558,14 @@ redisReader *redisReaderCreate(void) {
 
     r = calloc(sizeof(redisReader),1);
     if (r == NULL)
-        return NULL;
+        return NULL;//给r分配空间失败
 
     r->err = 0;
     r->errstr[0] = '\0';
     r->fn = &defaultFunctions;
     r->buf = sdsempty();
     r->maxbuf = REDIS_READER_MAX_BUF;
-    if (r->buf == NULL) {
+    if (r->buf == NULL) {//给r->buf分配空间失败
         free(r);
         return NULL;
     }
@@ -970,6 +970,7 @@ int redisFormatCommandArgv(char **target, int argc, const char **argv, const siz
     return totlen;
 }
 
+/* 给RedisContext写入错误信息 */
 void __redisSetError(redisContext *c, int type, const char *str) {
     size_t len;
 
@@ -980,7 +981,7 @@ void __redisSetError(redisContext *c, int type, const char *str) {
         memcpy(c->errstr,str,len);
         c->errstr[len] = '\0';
     } else {
-        /* Only REDIS_ERR_IO may lack a description! */
+        /* Only REDIS_ERR_IO may lack a description! 断言，只有REDIS_ERR_IO可能没有错误描述*/
         assert(type == REDIS_ERR_IO);
         strerror_r(errno,c->errstr,sizeof(c->errstr));
     }

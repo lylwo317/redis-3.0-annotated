@@ -153,8 +153,8 @@ void spt_init(int argc, char *argv[]) {
 	if (!(base = argv[0]))
 		return;
 
-	nul = &base[strlen(base)];
-	end = nul + 1;
+	nul = &base[strlen(base)];//'\0'的位置
+	end = nul + 1;//往下一个位置移动，因为nul是char *，所以移动一个byte。这里移动到了env环境变量字符串数组的开头
 
 	for (i = 0; i < argc || (i >= argc && argv[i]); i++) {
 		if (!argv[i] || argv[i] < end)

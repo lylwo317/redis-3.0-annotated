@@ -59,7 +59,7 @@ static void __redisSetErrorFromErrno(redisContext *c, int type, const char *pref
     size_t len = 0;
 
     if (prefix != NULL)
-        len = snprintf(buf,sizeof(buf),"%s: ",prefix);
+        len = snprintf(buf,sizeof(buf),"%s: ",prefix);//写入错误信息的前缀，一般是发生错误的方法名
     strerror_r(errno,buf+len,sizeof(buf)-len);
     __redisSetError(c,type,buf);
 }

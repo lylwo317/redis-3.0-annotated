@@ -153,9 +153,11 @@ void *zrealloc(void *ptr, size_t size) {
     size_t oldsize;
     void *newptr;
 
+    //如果指针是空，说明这个还没分配过堆，直接分配
     if (ptr == NULL) return zmalloc(size);
 #ifdef HAVE_MALLOC_SIZE
-    oldsize = zmalloc_size(ptr);
+    //指针不为空，执行重新分配操作
+    oldsize = zmalloc_size(ptr);//原来分配的大小
     newptr = realloc(ptr,size);
     if (!newptr) zmalloc_oom_handler(size);
 

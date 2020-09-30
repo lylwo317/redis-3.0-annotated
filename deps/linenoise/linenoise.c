@@ -1005,15 +1005,15 @@ int linenoiseHistoryAdd(const char *line) {
     }
 
     /* Don't add duplicated lines. */
-    if (history_len && !strcmp(history[history_len-1], line)) return 0;
+    if (history_len && !strcmp(history[history_len-1], line)) return 0;//history_len大于0，并且相等。哎呀，C语言就不能写得明白点吗。history_len > 0 && strcmp(history[history_len - 1], line) == 0)
 
     /* Add an heap allocated copy of the line in the history.
      * If we reached the max length, remove the older line. */
     linecopy = strdup(line);
     if (!linecopy) return 0;
     if (history_len == history_max_len) {
-        free(history[0]);
-        memmove(history,history+1,sizeof(char*)*(history_max_len-1));
+        free(history[0]);//删除第一个
+        memmove(history,history+1,sizeof(char*)*(history_max_len-1));//向前移动
         history_len--;
     }
     history[history_len] = linecopy;
@@ -1078,11 +1078,22 @@ int linenoiseHistoryLoad(const char *filename) {
     if (fp == NULL) return -1;
 
     while (fgets(buf,LINENOISE_MAX_LINE,fp) != NULL) {
-        char *p;
+        // char *p;
         
-        p = strchr(buf,'\r');
-        if (!p) p = strchr(buf,'\n');
-        if (p) *p = '\0';
+        // p = strchr(buf,'\r');//找到\r的指针位置，否则返回NULL（0）
+        // if (!p) p = strchr(buf,'\n');//返回NULL，就去找\n
+        // if (p) *p = '\0';//找到了\r或者\n，就将该位置的替换为\0
+        char *p;
+        p = strchr(buf, '\r');
+        if (!p)
+        {
+            p = strchr(buf, '\n');
+        }
+        if (p)
+        {
+            *p = '\0';
+        }
+
         linenoiseHistoryAdd(buf);
     }
     fclose(fp);

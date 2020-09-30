@@ -657,6 +657,7 @@ sds sdscatvprintf(sds s, const char *fmt, va_list ap) {
         va_copy(cpy,ap);
         // T = O(N)
         vsnprintf(buf, buflen, fmt, cpy);
+        va_end(cpy);
         if (buf[buflen-2] != '\0') {
             if (buf != staticbuf) zfree(buf);
             buflen *= 2;
@@ -1083,8 +1084,8 @@ cleanup:
 void sdsfreesplitres(sds *tokens, int count) {
     if (!tokens) return;
     while(count--)
-        sdsfree(tokens[count]);
-    zfree(tokens);
+        sdsfree(tokens[count]);//释放数组元素指向的内存
+    zfree(tokens);//释放数组占用的内存
 }
 
 /*
